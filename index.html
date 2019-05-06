@@ -7,9 +7,10 @@
     <link rel="stylesheet" href="style/style.css" media="screen" type="text/css">
  <title>tic-tac-toe</title>
 </head>
+<body>
 <header>
     <div class='set-players'>
-        <p>Choose Player</p>
+        <p>Choose First Player</p>
           <span class="leela">
           <img src='./img/Leela.png'>
           </span>
@@ -17,12 +18,16 @@
             <img src='./img/bender.png'>
           </span>
         </div>
+        <div id='players-count'>
+            <p>Choose players: 
+              <a class='comp-game'>One Player</a>
+              <a class='original-game'>Two Players</a>
+            </p>
+          </div>
+</header>
 <div id='current-palyer-display'>
   <p><span id="player-name"></span></p>
 </div>
-</header>
-<body>
-
 <div class='box'>
     <ul id="board">
         <li id='0'><img src='./img/white.png'></li>
@@ -37,7 +42,7 @@
     </ul>
 <footer>  
   <div class='button'>Play Again</div>
-  </div> 
+</div> 
 </footer>
 </body>
 <script

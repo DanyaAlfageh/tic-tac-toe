@@ -5,7 +5,7 @@ let boardArr = ['-','-','-','-','-','-','-','-','-'];
 overallvalue=boardArr.length;
 //let leelaArr =[], benderArr=[];
 let winner='none';
-
+let gameMode = 0;
 
 const setPlayers = function(event) {
   event.preventDefault();
@@ -33,6 +33,30 @@ const setPlayers = function(event) {
   }  
 };
 
+const setGame = function(event)
+{
+    event.preventDefault();
+    //if($('#players-count').hasClass('game-mode-chosen'))
+    //{
+      //  $(event.target).off();
+   // }
+   // else
+   // {
+        if($(event.target).hasClass('comp-game'))
+    {
+            console.log('Computer Mode'); 
+            gameMode=1;
+            
+        }
+    else if($(event.target).hasClass('original-game'))
+    {
+            console.log('Two Players mode'); 
+        
+        }
+    //}  
+
+}
+
 const clickReset = function(event) {
     location.reload();
 };
@@ -42,7 +66,7 @@ const PlayBoard =function(event){
     {
         $(event.target).off();
     }
-    else{
+    else{ //if(choice&&game-mode==1;){} esle{}
             if(choice)
             {$(event.target).attr('src','./img/Leela.png');
             $(event.target).parent().addClass('locked leela');
@@ -86,6 +110,7 @@ const PlayBoard =function(event){
 $('.button').on('click',clickReset);
 $('.set-players span img').on('click',setPlayers);
 $('.box li img').on('click',PlayBoard);    
+$('#players-count a').on('click',setGame);    
    
 
 const checkGame = function(boardArr){
