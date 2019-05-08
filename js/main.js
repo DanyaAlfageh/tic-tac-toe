@@ -251,6 +251,7 @@ const checkTie =function()
 }
 
 const countWins = function(){
-    $('.leela-wins').text(firstplayerwins);
-    $('.bender-wins').text(secondplayerwins);
+
+    $('.first-wins-number').text(' '+firstplayerwins+' ');
+    $('.second-wins-number').text(' '+secondplayerwins+' ');
 }
