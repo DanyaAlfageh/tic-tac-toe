@@ -78,13 +78,16 @@ li img{
     left: 0;
     width: 40%;
     height: 80%;
+    
 }
 
 #players-count p{
     font-family: Arial, Helvetica, sans-serif;
     color : purple;
     font-weight: bolder;  
-    padding: 20px 7px; 
+    padding: 20px 30px; 
+    text-align: right;
+    
 }
 
 #players-count a{ 
@@ -96,7 +99,7 @@ li img{
 
 #players-count a:hover{  
     font-family: Arial, Helvetica, sans-serif;
-    color : purple;
+    color: darkslategrey;
     font-weight: lighter;  
     padding: 20px 7px;
     transition: all 500ms;
@@ -128,6 +131,7 @@ header{
     bottom: 0;
     left: 0;
     background: #A7F0F0;
+    border-bottom: purple solid 5px;
 }
 
 footer{
@@ -172,4 +176,8 @@ footer{
 	text-decoration:none;
     background-color:#a20dbd; 
 }
-
+.win{
+    padding :5px;
+    color: darkslategrey;
+    font-weight: lighter;
+}

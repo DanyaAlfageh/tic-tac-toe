@@ -1,117 +1,211 @@
-let choice = false ;
-let firstpalyer='',leelavalue=0,bendervalue=0;
+let choice = true ;
+let position;
+let firstplayer='leela',secondplayer='bender',leelavalue=0,bendervalue=0;
+let firstplayerkey='l',secondplayerkey='b' ;
+let firstplayerimage='./img/leela.png', secondplayerimage='./img/bender.png';
 let occupiedBoxes=[];
+let emptypositions=['empty','empty','empty','empty','empty','empty','empty','empty','empty']
 let boardArr = ['-','-','-','-','-','-','-','-','-'];
-overallvalue=boardArr.length;
-//let leelaArr =[], benderArr=[];
+let overallvalue=boardArr.length;
+let firstplayerwins=0, secondplayerwins=0;
 let winner='none';
 let gameMode = 0;
+let resertflag=false;
 
 const setPlayers = function(event) {
   event.preventDefault();
-  if($('.set-players').hasClass('first-palyer-chosen'))
-  {
-    $(event.target).off();
-  }
-  else{
-    if($(event.target).parent().hasClass('leela'))
+  if($(event.target).parent().hasClass('leela'))
   {
         //console.log('Leela has been chosen'); 
-        choice = true;
-        firstpalyer='leela';
+        //choice = true;
+        firstplayer='leela';
+        firstplayerkey='l';
+        firstplayerimage='./img/leela.png';
+        secondplayer='bender';
+        secondplayerkey='b';
+        secondplayerimage='./img/bender.png';
+
         $(event.target).parent().parent().addClass('first-palyer-chosen');
-        $('#player-name').text('First Player is Leela');
+        $('#player-name').text('First Player is '+firstplayer);
     }
   else if($(event.target).parent().hasClass('bender'))
   {
         //console.log('Bender has been chosen'); 
-        choice = false;
-        firstpalyer='bender';
+        //choice = false;
+        firstplayer='bender';
+        firstplayerkey='b';
+        firstplayerimage='./img/bender.png';
+        secondplayer='leela';
+        secondplayerkey='l';
+        secondplayerimage='./img/leela.png';
+        
         $(event.target).parent().parent().addClass('first-palyer-chosen');
-        $('#player-name').text('First Player is Bender');
+        $('#player-name').text('First Player is '+firstplayer);
     }
-  }  
+
 };
 
 const setGame = function(event)
 {
     event.preventDefault();
-    //if($('#players-count').hasClass('game-mode-chosen'))
-    //{
-      //  $(event.target).off();
-   // }
-   // else
-   // {
-        if($(event.target).hasClass('comp-game'))
+   if($(event.target).hasClass('comp-game'))
     {
-            console.log('Computer Mode'); 
-            gameMode=1;
-            
+        $(event.target).addClass('after-click');    
+        $('#player-name').text('Computer Mode selected');
+        gameMode=1;
+        preventClick('.comp-game');
+        preventClick('.original-game');
+    
         }
     else if($(event.target).hasClass('original-game'))
     {
-            console.log('Two Players mode'); 
+        $(event.target).addClass('after-click');    
+        $('#player-name').text('Two Players mode Selected'); 
+        preventClick('.comp-game');
+        preventClick('.original-game');
         
         }
-    //}  
-
+ 
 }
 
 const clickReset = function(event) {
-    location.reload();
-};
-const PlayBoard =function(event){
 
-    if($(event.target).parent().hasClass('locked'))
+    resetflag=true;
+    choice=true;
+    $('.box li img').attr('src','./img/white.png');
+    occupiedBoxes=[];
+    emptypositions=['empty','empty','empty','empty','empty','empty','empty','empty','empty'];
+    boardArr = ['-','-','-','-','-','-','-','-','-'];
+    overallvalue=boardArr.length;
+    winner='none';
+    gameMode = 0;
+    $('#player-name').text('');
+    $('.set-players span img').off('click');
+    $('.set-players span img').on('click',setPlayers);
+    $('.box li img').off('click'); 
+    $('.box li img').on('click',PlayBoard);
+    $('#players-count a').off('click');      
+    $('#players-count a').on('click',setGame);  
+}
+//let rand = (Math.floor(Math.random()*8)+1);
+
+const computerGame = function(emptypositions,boardArr,occupiedBoxes)
+{
+    let firstEMpty=emptypositions.indexOf('empty');
+    occupiedBoxes.push(firstEMpty);
+    boardArr[firstEMpty]=secondplayerkey;
+    emptypositions[firstEMpty]='Taken';
+    $('#'+firstEMpty+' img').off();
+    if(firstEMpty==0)
+    return 0
+    else
+    return firstEMpty;
+}
+const preventClick = function(id)
+{
+    $(id).off('click');
+}
+
+const PlayBoard =function(event){
+   // event.preventDefault();
+    //console.log(firstpalyer);
+    
+    $('#players-count a').off('click',setGame);
+    $('.set-players span img').off('click',setPlayers); 
+    if(gameMode==1)
     {
-        $(event.target).off();
+        console.log(firstplayer);
+        $(event.target).attr('src',firstplayerimage);
+        occupiedBoxes.push($(event.target).parent().attr('id'));
+        boardArr[$(event.target).parent().attr('id')]=firstplayerkey;
+        emptypositions[$(event.target).parent().attr('id')]='Taken';
+        if($(event.target).attr('src')!='./img/white.png')
+        {preventClick($(event.target));}
+        let position= computerGame(emptypositions,boardArr,occupiedBoxes);
+        $('#'+position+' img').attr('src',secondplayerimage);
+        let win=checkGame(boardArr);
+        if(win==firstplayerkey) 
+        { 
+            firstplayerwins+=1;
+            displayWinner(firstplayer); 
+        }
+        else if(win==secondplayerkey) 
+        { 
+            secondplayerwins+=1; 
+            displayWinner(secondplayer); 
+        }
+        //console.log('occupied '+occupiedBoxes);
+        //console.log('board '+boardArr);
+        //console.log('empty '+emptypositions);
+        //console.log('bender '+benderposition);
+    
     }
-    else{ //if(choice&&game-mode==1;){} esle{}
-            if(choice)
-            {$(event.target).attr('src','./img/Leela.png');
-            $(event.target).parent().addClass('locked leela');
-            choice = false;
-            leelavalue+=1;
+    else if(gameMode==0)
+    { 
+        if(choice)
+        {
+            $('#players-count a').off('click',setGame); 
+            //console.log('occupied '+occupiedBoxes);
+            //console.log('board '+boardArr);
+            //console.log('empty '+emptypositions);
+            $(event.target).attr('src',firstplayerimage);
             overallvalue-=1;
-            $('#player-name').text('Current Player is Leela');
+            $('#player-name').text('Current Player is '+firstplayer);
+
+            preventClick($(event.target));
             occupiedBoxes.push($(event.target).parent().attr('id'));
-            boardArr[$(event.target).parent().attr('id')]='l';
-            //leelaArr.push($(event.target).parent().attr('id'));
-            if(checkGame(boardArr)=='l')
+            boardArr[$(event.target).parent().attr('id')]=firstplayerkey;
+            if(checkGame(boardArr)==firstplayerkey)
             {
-                displayWinner('Leela');
+                firstplayerwins+=1;
+                displayWinner(firstplayer);
                 
             }
-            
-        }
-////modified here 
+            choice = false;
+            //console.log(firstplayer+' '+choice+' first if');
+            //console.log(firstplayerimage+' first if image');
+            //console.log('occupied if '+occupiedBoxes);
+            //console.log('board if '+boardArr);
+    }
+    ////modified here 
         else
         {
-            $(event.target).attr('src','./img/bender.png');
-            $(event.target).parent().addClass('locked bender');
-            choice = true;
-            bendervalue+=1;
-            $('#player-name').text('Current Player is Bender');
-            occupiedBoxes.push($(event.target).parent().attr('id'));
-            boardArr[$(event.target).parent().attr('id')]='b';
-            overallvalue-=1;
-            //benderArr.push($(event.target).parent().attr('id'));
-            if(checkGame(boardArr)=='b')
-            {
-                displayWinner('Bender');
-                
-            }
             
+            $(event.target).attr('src',secondplayerimage);
+            $('#player-name').text('Current Player is '+secondplayer);
+
+            preventClick($(event.target));
+            occupiedBoxes.push($(event.target).parent().attr('id'));
+            boardArr[$(event.target).parent().attr('id')]=secondplayerkey;
+            overallvalue-=1;
+            
+            if(checkGame(boardArr)==secondplayerkey)
+            {
+                secondplayerwins+=1;
+                displayWinner(secondplayer); 
+            }
+            choice = true;
+            //preventClick($(event.target));
+            //console.log('=================================')
+            //console.log('occupied else '+occupiedBoxes);
+            //console.log('board else '+boardArr);
+            //console.log(secondplayerimage+' second else image');
+            //console.log('empty '+emptypositions);
+            //console.log(secondplayer+'second player else body');
+            //console.log('else body ');
         }
-        
-    }
+            
+    }/////
+
+
+  
 };
 
-$('.button').on('click',clickReset);
+
 $('.set-players span img').on('click',setPlayers);
 $('.box li img').on('click',PlayBoard);    
 $('#players-count a').on('click',setGame);    
-   
+$('.button').on('click',clickReset);  
 
 const checkGame = function(boardArr){
 
@@ -138,7 +232,7 @@ const checkGame = function(boardArr){
             return winner=boardArr[2];
         else 
         if(overallvalue==0)
-        checkTie(boardArr);
+        checkTie();
     }
 }
 
@@ -146,13 +240,17 @@ const displayWinner = function (winner)
 {
     $('.box li img').off('click');
     $('#player-name').text('The winner is '+winner);
-   
+    countWins();
 }
 
-const checkTie =function(boardArr)
+const checkTie =function()
 {
-   
    $('.box li img').off('click');
    $('#player-name').text('It is a Tie');
-    
+  
+}
+
+const countWins = function(){
+    $('.leela-wins').text(firstplayerwins);
+    $('.bender-wins').text(secondplayerwins);
 }
